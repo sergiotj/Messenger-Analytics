@@ -156,7 +156,7 @@ public class MessengerAnalytics extends Application {
     }
     
     public static void main(String[] args) {
-
+        
         launch(args);
         
     }   
