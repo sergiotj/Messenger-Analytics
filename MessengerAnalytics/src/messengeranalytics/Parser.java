@@ -46,7 +46,7 @@ public class Parser {
         
         try {     
             
-            Object obj = parser.parse(new FileReader("C:\\Users\\Sergi\\Desktop\\message.json"));
+            Object obj = parser.parse(new FileReader("message.json"));
             
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray numbers = (JSONArray) jsonObject.get("messages");
