@@ -7,6 +7,7 @@ package messengeranalytics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,9 +45,42 @@ public class MessengerAnalytics extends Application {
     final XYChart.Series<String, Number> series1 = new XYChart.Series<>();
     final XYChart.Series<String, Number> series2 = new XYChart.Series<>();
     
-    LinkedHashMap<String, ArrayList<Message>> myMessages = new LinkedHashMap(); 
+            
+    Map<String, ArrayList<Message>> myMessages = new TreeMap<String, ArrayList<Message>>(new Comparator<String>() {
+        public int compare(String s1, String s2) {
+            SimpleDateFormat sd = new SimpleDateFormat("MM/yyyy");
+
+            try {
+
+                Date date1 =  sd.parse(s1);
+                Date date2 = sd.parse(s2);
+
+                return date1.compareTo(date2);
+
+            } catch(Exception e){};
+
+            return -1;
+
+        }
+});
     
-    LinkedHashMap<String, ArrayList<Message>> otherMessages = new LinkedHashMap(); 
+    Map<String, ArrayList<Message>> otherMessages = new TreeMap<String, ArrayList<Message>>(new Comparator<String>() {
+            public int compare(String s1, String s2) {
+                SimpleDateFormat sd = new SimpleDateFormat("MM/yyyy");
+
+                try {
+                    
+                    Date date1 = sd.parse(s1);
+                    Date date2 = sd.parse(s2);
+                    
+                    return date1.compareTo(date2);
+                    
+                } catch(Exception e){};
+                
+                return -1;
+            
+            }
+    });
     
     String diaMaior;
     
@@ -58,7 +92,8 @@ public class MessengerAnalytics extends Application {
     
     
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
+        
         
         this.getMessages();
         
@@ -92,18 +127,18 @@ public class MessengerAnalytics extends Application {
                 
         sbc.getData().addAll(series1, series2);
         
-        SubScene subSceneOne = new SubScene(sbc,720,500);
+        SubScene subSceneOne = new SubScene(sbc,1024,500);
 
         StackPane layoutTwo = new StackPane();
         
         Label label1 = new Label("O mês com mais mensagens foi o " + diaMaior + " e o " + "número de mensagens desse mês: " + maior + System.lineSeparator() + "Número de mensagens total: " + messagesNumber + System.lineSeparator());
         layoutTwo.getChildren().add(label1);
-        SubScene subSceneTwo = new SubScene(layoutTwo,720,100);
+        SubScene subSceneTwo = new SubScene(layoutTwo,1024,100);
 
         VBox root = new VBox();
         root.setAlignment(Pos.TOP_LEFT);
         root.getChildren().addAll(subSceneOne,subSceneTwo);
-        Scene mainScene = new Scene(root,720,600);
+        Scene mainScene = new Scene(root,1024,600);
         
         stage.setScene(mainScene);
         stage.setResizable(false);
