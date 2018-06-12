@@ -16,6 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.Image ;
+import java.util.stream.Collectors;
+import static java.util.Collections.reverseOrder;
 
 public class MessengerAnalytics extends Application {
 
@@ -71,7 +73,22 @@ public class MessengerAnalytics extends Application {
     public void start(Stage stage) throws Exception {
         
         Parser parser = new Parser();
-        parser.GetMessagesFromFile(myMessages, otherMessages);
+        parser.GetMessagesFromFile(myMessages, otherMessages, words);
+        
+        Map<String, Integer> sortedMap = 
+            words.entrySet().stream()
+           .sorted(reverseOrder(Map.Entry.comparingByValue()))
+           .limit(10)
+           .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                     (e1, e2) -> e1, LinkedHashMap::new));
+        
+        String total = null;
+        for (Map.Entry<String, Integer> entry : sortedMap.entrySet()){
+            
+            String palavras = entry.getKey() + ":" + entry.getValue() + " ";
+            
+            total = total + palavras;
+        }
         
         sbc.setStyle("CHART_COLOR_1: #fe9b75;CHART_COLOR_2: #865171;");
         stage.setTitle("Mensagens com o utilizador");
@@ -106,15 +123,19 @@ public class MessengerAnalytics extends Application {
         SubScene subSceneOne = new SubScene(sbc,1024,500);
 
         StackPane layoutTwo = new StackPane();
+        layoutTwo.setPrefSize(1024, 300);
         
         Label label1 = new Label("O mês com mais mensagens foi o " + parser.getDiaMaior() + " e o " + "número de mensagens desse mês: " + parser.getMaior() + System.lineSeparator() + "Número de mensagens total: " + parser.getMessagesNumber() + System.lineSeparator());
-        layoutTwo.getChildren().add(label1);
-        SubScene subSceneTwo = new SubScene(layoutTwo,1024,100);
+        Label label2 = new Label(total);
+        Label label3 = new Label(total);
+        Label label4 = new Label(total);
+        layoutTwo.getChildren().addAll(label1, label2, label3, label4);
+        SubScene subSceneTwo = new SubScene(layoutTwo,1024,300);
 
         VBox root = new VBox();
         root.setAlignment(Pos.TOP_LEFT);
         root.getChildren().addAll(subSceneOne,subSceneTwo);
-        Scene mainScene = new Scene(root,1024,600);
+        Scene mainScene = new Scene(root,1024,800);
         
         stage.setScene(mainScene);
         stage.setResizable(false);

@@ -38,7 +38,7 @@ public class Parser {
         return pessoa;
     }
     
-    public void GetMessagesFromFile(Map<String, ArrayList<Message>> myMessages, Map<String, ArrayList<Message>> otherMessages) {
+    public void GetMessagesFromFile(Map<String, ArrayList<Message>> myMessages, Map<String, ArrayList<Message>> otherMessages, Map<String, Integer> words) {
         
         JSONParser parser = new JSONParser();
   
@@ -73,6 +73,22 @@ public class Parser {
                 else contentISO = "Sem conteúdo";
                 
                 Message mensagem = new Message (timestamp, contentISO);
+                
+                String[] wordsArray = contentISO.split("\\W+");
+                
+                for (int i = 0; i < wordsArray.length; i++) {
+                
+                    if (words.containsKey(wordsArray[i])) {
+                        
+                        if (wordsArray[i].length() > 3)
+                        words.put(wordsArray[i], words.get(wordsArray[i]) + 1);
+                    }
+
+                    else {
+                        if (wordsArray[i].length() > 4)
+                        words.put(wordsArray[i], 1);
+                    }
+                }
                 
                 if (senderISO.equals("Sérgio Jorge")) {
                 
