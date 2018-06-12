@@ -15,7 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
-import javafx.scene.image.Image ;
+import javafx.scene.image.Image;
+import javafx.scene.control.ListView;
 import java.util.stream.Collectors;
 import static java.util.Collections.reverseOrder;
 
@@ -37,7 +38,7 @@ public class MessengerAnalytics extends Application {
 
             try {
 
-                Date date1 =  sd.parse(s1);
+                Date date1 = sd.parse(s1);
                 Date date2 = sd.parse(s2);
 
                 return date1.compareTo(date2);
@@ -78,7 +79,7 @@ public class MessengerAnalytics extends Application {
         Map<String, Integer> sortedMap = 
             words.entrySet().stream()
            .sorted(reverseOrder(Map.Entry.comparingByValue()))
-           .limit(10)
+           .limit(25)
            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                                      (e1, e2) -> e1, LinkedHashMap::new));
         
@@ -122,19 +123,29 @@ public class MessengerAnalytics extends Application {
         
         SubScene subSceneOne = new SubScene(sbc,1024,500);
 
-        StackPane layoutTwo = new StackPane();
-        layoutTwo.setPrefSize(1024, 300);
-        
-        Label label1 = new Label("O mês com mais mensagens foi o " + parser.getDiaMaior() + " e o " + "número de mensagens desse mês: " + parser.getMaior() + System.lineSeparator() + "Número de mensagens total: " + parser.getMessagesNumber() + System.lineSeparator());
-        Label label2 = new Label(total);
-        Label label3 = new Label(total);
-        Label label4 = new Label(total);
-        layoutTwo.getChildren().addAll(label1, label2, label3, label4);
-        SubScene subSceneTwo = new SubScene(layoutTwo,1024,300);
-
         VBox root = new VBox();
         root.setAlignment(Pos.TOP_LEFT);
-        root.getChildren().addAll(subSceneOne,subSceneTwo);
+        root.getChildren().addAll(subSceneOne);
+        
+        ArrayList<String> palPlusTimes = new ArrayList<String>();
+        
+        for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+            
+            String word = entry.getKey();
+            String times = entry.getValue().toString();
+            
+            String finalWord = word + " " + times + "x";
+            
+            palPlusTimes.add(finalWord);
+            
+        }
+        
+        
+        ListView<String> list = new ListView<>();
+        list.getItems().addAll(palPlusTimes);
+        
+        
+        root.getChildren().add(list);
         Scene mainScene = new Scene(root,1024,800);
         
         stage.setScene(mainScene);
