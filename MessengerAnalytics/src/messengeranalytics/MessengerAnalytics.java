@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package messengeranalytics;
+
 import java.util.*;
 import java.text.SimpleDateFormat;
 import javafx.application.Application;
@@ -20,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.Image ;
-
 
 public class MessengerAnalytics extends Application {
 
