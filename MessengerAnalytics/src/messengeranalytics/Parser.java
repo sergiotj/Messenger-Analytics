@@ -20,7 +20,9 @@ public class Parser {
     
     private Integer messagesNumber;
     
-    private String pessoa;
+    private String person1;
+    
+    private String person2;
     
     public String getDiaMaior() {
         return diaMaior;
@@ -34,11 +36,15 @@ public class Parser {
         return messagesNumber;
     }
     
-    public String getPessoa() {
-        return pessoa;
+    public String getPerson1() {
+        return person1;
     }
     
-    public void GetMessagesFromFile(Map<String, ArrayList<Message>> myMessages, Map<String, ArrayList<Message>> otherMessages, Map<String, Integer> words) {
+    public String getPerson2() {
+        return person2;
+    }
+    
+    public void GetMessagesFromFile(Map<String, ArrayList<Message>> person1Messages, Map<String, ArrayList<Message>> person2Messages, Map<String, Integer> words) {
         
         JSONParser parser = new JSONParser();
   
@@ -50,7 +56,9 @@ public class Parser {
             
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray numbers = (JSONArray) jsonObject.get("messages");
-
+            
+            int counter = 0;
+            
             for (Object number : numbers) {
 
                 String contentISO;
@@ -59,6 +67,12 @@ public class Parser {
                 
                 String sender = (String) jsonNumber.get("sender_name");
                 String senderISO = new String(sender.getBytes("ISO-8859-1"));
+                
+                if (counter == 0) {
+                    person1 = senderISO;
+                }
+                
+                counter++;
                 
                 Long timestamp = (Long) jsonNumber.get("timestamp") * 1000L;
                 Date date = new Date(timestamp);
@@ -90,35 +104,35 @@ public class Parser {
                     }
                 }
                 
-                if (senderISO.equals("Sérgio Jorge")) {
+                if (senderISO.equals(person1)) {
                 
-                    if (myMessages.containsKey(month)) {
+                    if (person1Messages.containsKey(month)) {
 
-                        myMessages.get(month).add(mensagem);
+                        person1Messages.get(month).add(mensagem);
                     }
 
                     else {
                         
                         ArrayList<Message> mensagens = new ArrayList<>();
                         mensagens.add(mensagem);
-                        myMessages.put(month, mensagens);
+                        person1Messages.put(month, mensagens);
                     }
                 }
                 
                 else {
                     
-                    pessoa = senderISO;
+                    person2 = senderISO;
                     
-                    if (otherMessages.containsKey(month)) {
+                    if (person2Messages.containsKey(month)) {
 
-                        otherMessages.get(month).add(mensagem);
+                        person2Messages.get(month).add(mensagem);
                     }
 
                     else {
 
                         ArrayList<Message> mensagens = new ArrayList<>();
                         mensagens.add(mensagem);
-                        otherMessages.put(month, mensagens);
+                        person2Messages.put(month, mensagens);
                     }
                     
                 }
@@ -135,7 +149,7 @@ public class Parser {
         messagesNumber = 0;
         
         
-        for (Map.Entry<String,ArrayList<Message>> par : otherMessages.entrySet()){
+        for (Map.Entry<String,ArrayList<Message>> par : person2Messages.entrySet()){
             
             if (par.getValue().size() > otherMaior) {
                 otherMaior = par.getValue().size();
@@ -145,7 +159,7 @@ public class Parser {
             messagesNumber += par.getValue().size();
         }
         
-        for (Map.Entry<String,ArrayList<Message>> par : myMessages.entrySet()){
+        for (Map.Entry<String,ArrayList<Message>> par : person1Messages.entrySet()){
             
             if (par.getValue().size() > myMaior) {
                 myMaior = par.getValue().size();

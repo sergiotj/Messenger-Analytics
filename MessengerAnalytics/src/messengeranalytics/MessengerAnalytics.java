@@ -30,7 +30,7 @@ public class MessengerAnalytics extends Application {
     
     Map<String, Integer> words = new HashMap<String, Integer>();
     
-    Map<String, ArrayList<Message>> myMessages = new TreeMap<String, ArrayList<Message>>(new Comparator<String>() {
+    Map<String, ArrayList<Message>> person1Messages = new TreeMap<String, ArrayList<Message>>(new Comparator<String>() {
         
         @Override
         public int compare(String s1, String s2) {
@@ -50,7 +50,7 @@ public class MessengerAnalytics extends Application {
         }
     });
     
-    Map<String, ArrayList<Message>> otherMessages = new TreeMap<String, ArrayList<Message>>(new Comparator<String>() {
+    Map<String, ArrayList<Message>> person2Messages = new TreeMap<String, ArrayList<Message>>(new Comparator<String>() {
        
         @Override    
         public int compare(String s1, String s2) {
@@ -74,7 +74,7 @@ public class MessengerAnalytics extends Application {
     public void start(Stage stage) throws Exception {
         
         Parser parser = new Parser();
-        parser.GetMessagesFromFile(myMessages, otherMessages, words);
+        parser.GetMessagesFromFile(person1Messages, person2Messages, words);
         
         Map<String, Integer> sortedMap = 
             words.entrySet().stream()
@@ -100,21 +100,21 @@ public class MessengerAnalytics extends Application {
         
         sbc.setTitle("Mensagens");
         xAxis.setLabel("Meses");
-        String[] years = myMessages.keySet().toArray(new String[myMessages.size()]);
+        String[] years = person1Messages.keySet().toArray(new String[person1Messages.size()]);
         
         CategoryAxis xAxis = new CategoryAxis();
         
         xAxis.setCategories(FXCollections.<String>observableArrayList(years));
         
         yAxis.setLabel("Nº de mensagens");
-        series1.setName("Eu");
-        series2.setName(parser.getPessoa());
+        series1.setName(parser.getPerson1());
+        series2.setName(parser.getPerson2());
         
-        for (Map.Entry<String,ArrayList<Message>> myM : myMessages.entrySet()){
+        for (Map.Entry<String,ArrayList<Message>> myM : person1Messages.entrySet()){
             series1.getData().add(new XYChart.Data<>(myM.getKey(), myM.getValue().size()));
         }
         
-        for (Map.Entry<String,ArrayList<Message>> otherM : otherMessages.entrySet()){
+        for (Map.Entry<String,ArrayList<Message>> otherM : person2Messages.entrySet()){
             
             series2.getData().add(new XYChart.Data<>(otherM.getKey(), otherM.getValue().size()));
         }
