@@ -74,7 +74,7 @@ public class Parser {
                 
                 counter++;
                 
-                Long timestamp = (Long) jsonNumber.get("timestamp") * 1000L;
+                Long timestamp = (Long) jsonNumber.get("timestamp_ms");
                 Date date = new Date(timestamp);
                 String month = sd.format(date);
                 

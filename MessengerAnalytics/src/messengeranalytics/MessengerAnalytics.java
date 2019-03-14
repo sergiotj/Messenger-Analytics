@@ -79,7 +79,7 @@ public class MessengerAnalytics extends Application {
         Map<String, Integer> sortedMap = 
             words.entrySet().stream()
            .sorted(reverseOrder(Map.Entry.comparingByValue()))
-           .limit(50)
+           .limit(200)
            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                                      (e1, e2) -> e1, LinkedHashMap::new));
         
